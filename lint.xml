@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="RtlHardcoded" severity="ignore" />
+    <issue id="ServiceCast">
+        <ignore path="src/com/zjw/mobilesafe/Setup2Activity.java" />
+    </issue>
+</lint>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zjw="http://schemas.android.com/apk/res/com.zjw.mobilesafe"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#8866ff00"
+        android:gravity="center"
+        android:text="设置中心"
+        android:textColor="#000000"
+        android:textSize="22sp" />
+
+    <com.zjw.mobilesafe.ui.SettingItemView
+        android:id="@+id/mm_siv_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        zjw:desc_off="自动更新已关闭"
+        zjw:desc_on="自动更新已开启"
+        zjw:mtitle="设置自动更新" >
+    </com.zjw.mobilesafe.ui.SettingItemView>
+
+    <com.zjw.mobilesafe.ui.SettingItemView
+        android:id="@+id/mm_siv_incomming_address_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        zjw:desc_off="来电显示已关闭"
+        zjw:desc_on="来电显示已开启"
+        zjw:mtitle="设置来电显示" >
+    </com.zjw.mobilesafe.ui.SettingItemView>
+
+    <com.zjw.mobilesafe.ui.SettingClickView
+        android:id="@+id/mm_scv_address_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        zjw:mtitle="设置来电归属地风格" >
+    </com.zjw.mobilesafe.ui.SettingClickView>
+
+</LinearLayout>
