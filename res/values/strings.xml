@@ -10,5 +10,6 @@
     <string name="sample_device_admin">我的设备管理器</string>
     <string name="title_activity_advance_tool">AdvanceToolActivity</string>
     <string name="title_activity_query_num_address">QueryNumAddressActivity</string>
+    <string name="title_activity_call_sms_safe">CallSmsSafeActivity</string>
 
 </resources>

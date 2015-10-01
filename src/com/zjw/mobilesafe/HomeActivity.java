@@ -45,21 +45,25 @@ public class HomeActivity extends Activity {
 		adapter = new MyAdapter();
 		gv_homelist.setAdapter(adapter);
 		gv_homelist.setOnItemClickListener(new OnItemClickListener() {
-
+			Intent intent;
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				switch (position) {
-				case 8:
-					Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
-					startActivity(intent);
-					break;
 				case 0:
 					// 弹出对话框，设置密码。先检查有木有设置密码
 					showLostFindDialog();
 					break;
+				case 1:
+					intent = new Intent(HomeActivity.this, CallSmsSafeActivity.class);
+					startActivity(intent);
+					break;
 				case 7:
-					Intent intent2 = new Intent(HomeActivity.this, AdvanceToolActivity.class);
-					startActivity(intent2);
+					intent = new Intent(HomeActivity.this, AdvanceToolActivity.class);
+					startActivity(intent);
+					break;
+				case 8:
+					intent = new Intent(HomeActivity.this, SettingActivity.class);
+					startActivity(intent);
 					break;
 				}
 

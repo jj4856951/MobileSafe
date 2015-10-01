@@ -39,4 +39,12 @@
         zjw:mtitle="设置来电归属地风格" >
     </com.zjw.mobilesafe.ui.SettingClickView>
 
+    <com.zjw.mobilesafe.ui.SettingItemView
+        android:id="@+id/mm_siv_black_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        zjw:desc_off="黑名单监控已关闭"
+        zjw:desc_on="黑名单监控已开启"
+        zjw:mtitle="设置黑名单监控" >
+    </com.zjw.mobilesafe.ui.SettingItemView>
 </LinearLayout>

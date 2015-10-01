@@ -20,13 +20,25 @@
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.zjw.mobilesafe" >
+    </instrumentation>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <uses-library android:name="android.test.runner" />
+
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name" >
@@ -98,8 +110,13 @@
             android:label="@string/title_activity_query_num_address" >
         </activity>
 
-        <service android:name="com.zjw.mobilesafe.service.AddressShowService" />
+        <service android:name=".service.AddressShowService" />
 
+        <activity
+            android:name=".CallSmsSafeActivity"
+            android:label="@string/title_activity_call_sms_safe" >
+        </activity>
+        <service android:name="com.zjw.mobilesafe.service.CallSmsSafeService"></service>
     </application>
 
 </manifest>
