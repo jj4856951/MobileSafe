@@ -11,9 +11,12 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,21 +27,90 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class CallSmsSafeActivity extends Activity {
+	protected static final String TAG = "CallSmsSafeActivity";
 	private ListView mm_balck_list;
 	private BlackNumberInfo info;
 	private List<BlackNumberInfo> list;
 	private BlackNumberDao dao;
 	private MyAdapter adapter;
+	private int offset = 0;
+	private int max = 20;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_call_sms_safe);
+		mm_ll_loading = findViewById(R.id.mm_ll_loading);
 		mm_balck_list = (ListView) findViewById(R.id.mm_balck_list);
 		dao = new BlackNumberDao(this);
-		list = dao.findAll();
-		adapter = new MyAdapter();
-		mm_balck_list.setAdapter(adapter);
+		fillData();
+		
+		/**
+		 * 给listview注册滚动事件的监听器
+		 */
+		mm_balck_list.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch (scrollState) {
+				case OnScrollListener.SCROLL_STATE_IDLE:
+					//判断当前listview展示的最后一条数据在集合中的位置
+					int position = mm_balck_list.getLastVisiblePosition();
+					if (position == list.size()-1) {
+						Log.e(TAG, "到达当前页面最后一条位置");
+						offset += max;
+						fillData();
+					}
+					
+//					Log.e(TAG, "空闲状态");
+					break;
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+//					Log.e(TAG, "手指触摸滚动");
+					break;
+				case OnScrollListener.SCROLL_STATE_FLING:
+//					Log.e(TAG, "惯性滑行");
+					break;
+
+				default:
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
+	}
+	private void fillData() {
+		mm_ll_loading.setVisibility(View.VISIBLE);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if (list == null) {
+					list = dao.findPart(offset, max);					
+				}else {
+					list.addAll(dao.findPart(offset, max));
+				}
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						mm_ll_loading.setVisibility(View.INVISIBLE);
+						if (adapter == null) {
+							adapter = new MyAdapter();
+							mm_balck_list.setAdapter(adapter);
+						}else {
+							adapter.notifyDataSetChanged();
+						}
+						
+					}
+				});
+			}
+		}).start();
 	}
 	
 	private EditText ed_blackNumber;
@@ -46,6 +118,7 @@ public class CallSmsSafeActivity extends Activity {
 	private CheckBox cb_sms;
 	private Button bt_ok;
 	private Button bt_cancel;
+	private View mm_ll_loading;
 	public void addBlackNumber(View view) {
 		AlertDialog.Builder builder = new Builder(this);
 		final AlertDialog dialog = builder.create();

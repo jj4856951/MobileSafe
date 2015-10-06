@@ -86,48 +86,49 @@ public class AdvanceToolActivity extends Activity {
 	 */
 	public void smsRecover(View view) {
 		pd = new ProgressDialog(this);
-		pd.setTitle("正在恢复...");
+		pd.setTitle("正在备份...");
 		pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		pd.show();
-		//耗时
+		
 		new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				try {
-					SmsUtils.recoverSMS(AdvanceToolActivity.this, true, new SmsCallback() {
+					SmsUtils.recoverSMS(getApplicationContext(), true, new SmsCallback() {
 						
 						@Override
 						public void onBackup(int currentProgress) {
 							pd.setProgress(currentProgress);
+							
 						}
 						
 						@Override
 						public void beforeBackup(int max) {
 							pd.setMax(max);
+							
 						}
 					});
 					runOnUiThread(new Runnable() {
 						
 						@Override
 						public void run() {
-							Toast.makeText(AdvanceToolActivity.this, "恢复成功", 0).show();
+							Toast.makeText(getApplicationContext(), "恢复成功", 0).show();
 							pd.dismiss();
 						}
 					});
 				} catch (Exception e) {
-					e.printStackTrace();
 					runOnUiThread(new Runnable() {
 						
 						@Override
 						public void run() {
-							Toast.makeText(AdvanceToolActivity.this, "恢复失败", 0).show();
+							Toast.makeText(getApplicationContext(), "恢复失败", 0).show();
 							pd.dismiss();
 						}
 					});
 				}
+				
 			}
 		}).start();
 	}
-	
 }

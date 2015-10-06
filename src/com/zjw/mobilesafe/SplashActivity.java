@@ -22,9 +22,12 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -60,6 +63,15 @@ public class SplashActivity extends Activity {
 		tv_version.setText("版本号："+getVersion());
 		
 		tv_progress = (TextView) findViewById(R.id.mm_tv_progress);
+		
+		/**
+		 * 创建桌面快捷图标
+		 */
+		createShortcut();
+		
+		/**
+		 * 检测查询归属地的数据库是否要拷贝，只有拷贝到文件下，才能访问。
+		 */
 		copyAddressDatabases();
 		boolean update = sp.getBoolean("update", false);
 		if (update) {
@@ -81,6 +93,29 @@ public class SplashActivity extends Activity {
 		findViewById(R.id.mm_rl_splash).startAnimation(aa);
 	}
 	
+	private void createShortcut() {
+		if (sp.getBoolean("shortcut", false)) {
+			return;
+		}
+		Editor editor = sp.edit();
+		
+		//发送广播的意图，大吼一声，我要创建桌面图标了。
+		Intent intent = new Intent();
+		intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+		//一个快捷方式必须有3部分，图标，名字和开启的意图
+		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "手机安全卫士");
+		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+		Intent shortcutIntent = new Intent();
+		shortcutIntent.setAction("android.intent.action.MAIN");
+		shortcutIntent.addCategory("android.intent.category.LAUNCHER");
+		shortcutIntent.setClassName(getPackageName(), "com.zjw.mobilesafe.SplashActivity");
+		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent );
+		//送信
+		sendBroadcast(intent);
+		editor.putBoolean("shortcut", true);
+		editor.commit();
+	}
+
 	/**
 	 * 将要访问的数据库copy到包名/files/文件下
 	 * "data/data/<包名>/files/address.db"

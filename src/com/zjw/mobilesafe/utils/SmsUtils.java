@@ -92,7 +92,17 @@ public class SmsUtils {
 	}
 
 	public static void recoverSMS(Context context, boolean flag, SmsCallback callback) throws Exception {
-
+		Log.e(TAG, "===---==-=-=-=-=-");
+//		Uri uri = Uri.parse("content://sms/");
+//		ContentValues values = new ContentValues();
+//		values.put("date", "1443013839302");
+//		values.put("body", "hahaah");
+//		values.put("type", "1");
+//		values.put("address", "121");
+//		
+//		context.getContentResolver().insert(uri, values);
+		
+		
 		String date = null;
 		String body = null;
 		String type = null;
@@ -102,6 +112,7 @@ public class SmsUtils {
 		if (flag) {
 			//恢复前先删除旧的短信
 			context.getContentResolver().delete(uri, null, null);
+//			return;
 		}
 
 		File file = new File(Environment.getExternalStorageDirectory(), "backup.xml");
@@ -146,7 +157,7 @@ public class SmsUtils {
 				break;
 			}
 			eventType = parser.next();
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 
 		if (reader != null) {

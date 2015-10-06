@@ -55,9 +55,42 @@ public class BlackNumberDao {
 	 * @return
 	 */
 	public List<BlackNumberInfo> findAll() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		List<BlackNumberInfo> list = new ArrayList<BlackNumberInfo>();
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor cursor = db.rawQuery("select number,mode from blacknumber order by _id desc", null);
+		while(cursor.moveToNext()){
+			String number = cursor.getString(0);
+			String mode = cursor.getString(1);
+			BlackNumberInfo info = new BlackNumberInfo(number, mode);
+			list.add(info);
+		}
+		cursor.close();
+		db.close();
+		return list;
+	}
+
+	/**
+	 * 分批获取数据
+	 * @param offset 从哪个位置开始获取数据
+	 * @param max 一次获取多少条数据
+	 * @return
+	 */
+	public List<BlackNumberInfo> findPart(int offset, int max) {
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		List<BlackNumberInfo> list = new ArrayList<BlackNumberInfo>();
+		SQLiteDatabase db = helper.getReadableDatabase();
+		Cursor cursor = db.rawQuery("select number,mode from blacknumber order by _id desc limit ? offset ?", new String[]{String.valueOf(max), String.valueOf(offset)});
 		while(cursor.moveToNext()){
 			String number = cursor.getString(0);
 			String mode = cursor.getString(1);
