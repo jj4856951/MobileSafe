@@ -3,7 +3,7 @@ package com.zjw.mobilesafe;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.zjw.mobilesafe.engine.AppInfo;
+import com.zjw.mobilesafe.domain.AppInfo;
 import com.zjw.mobilesafe.engine.AppInfoProvider;
 import com.zjw.mobilesafe.utils.DensityUtil;
 

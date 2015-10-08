@@ -3,6 +3,8 @@ package com.zjw.mobilesafe.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zjw.mobilesafe.domain.AppInfo;
+
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;

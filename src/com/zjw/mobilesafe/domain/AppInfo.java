@@ -1,4 +1,4 @@
-package com.zjw.mobilesafe.engine;
+package com.zjw.mobilesafe.domain;
 
 import android.graphics.drawable.Drawable;
 

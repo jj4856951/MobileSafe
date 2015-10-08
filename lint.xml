@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="NewApi">
+        <ignore path="src/com/zjw/mobilesafe/engine/TaskInfoProvider.java" />
+        <ignore path="src/com/zjw/mobilesafe/utils/SystemInfoUtil.java" />
+    </issue>
     <issue id="RtlHardcoded" severity="ignore" />
     <issue id="ServiceCast">
         <ignore path="src/com/zjw/mobilesafe/Setup2Activity.java" />
