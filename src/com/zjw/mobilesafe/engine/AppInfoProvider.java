@@ -33,6 +33,8 @@ public class AppInfoProvider {
 			String packageName = packageInfo.packageName;
 			Drawable icon = packageInfo.applicationInfo.loadIcon(pm);
 			String name = packageInfo.applicationInfo.loadLabel(pm).toString();
+			int uid = packageInfo.applicationInfo.uid;
+			info.setUid(uid);
 			int flag = packageInfo.applicationInfo.flags;//获取应用程序标记
 			if ((flag & ApplicationInfo.FLAG_SYSTEM) == 0) {
 				//是用户的程序

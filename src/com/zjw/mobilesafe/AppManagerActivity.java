@@ -3,6 +3,7 @@ package com.zjw.mobilesafe;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zjw.mobilesafe.db.dao.AppLockDao;
 import com.zjw.mobilesafe.domain.AppInfo;
 import com.zjw.mobilesafe.engine.AppInfoProvider;
 import com.zjw.mobilesafe.utils.DensityUtil;
@@ -33,6 +34,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,22 +74,30 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 	 * 固定在上方的程序个数提示状态
 	 */
 	private TextView tv_status;
+	private ImageView iv_status;
 
 	/**
 	 * 弹出的小窗体
 	 */
 	private PopupWindow pw;
+	
+	/**
+	 * 程序锁的数据库
+	 */
+	private AppLockDao dao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_manager);
+		dao = new AppLockDao(this);
 		tv_avail_rom = (TextView) findViewById(R.id.tv_avail_rom);
 		tv_avail_sd = (TextView) findViewById(R.id.tv_avaul_sd);
 		lv_app_manager = (ListView) findViewById(R.id.lv_app_manager);
 		ll_loading = (LinearLayout) findViewById(R.id.ll_loading);
 		tv_status = (TextView) findViewById(R.id.tv_status);
+		iv_status = (ImageView) findViewById(R.id.iv_status);
 
 		long romSize = getAvailSpace(Environment.getExternalStorageDirectory().getAbsolutePath());
 		long sdSize = getAvailSpace(Environment.getDataDirectory().getAbsolutePath());
@@ -96,6 +106,31 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 
 		ll_loading.setVisibility(View.VISIBLE);
 		fillData();
+		
+		lv_app_manager.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				if (position == 0 || position == userAppLists.size() + 1) {
+					return true;
+				} else if (position <= userAppLists.size()) {
+					info = userAppLists.get(position - 1);
+				} else {
+					info = systemAppLists.get(position - userAppLists.size() - 2);
+				}
+				ViewHolder holder = (ViewHolder) view.getTag();
+				if (dao.find(info.getPackname())) {
+					dao.delete(info.getPackname());
+					holder.iv_status.setImageResource(R.drawable.unlock);
+				}else {
+					dao.add(info.getPackname());
+					holder.iv_status.setImageResource(R.drawable.lock);
+				}
+				
+				
+				return true;
+			}
+		});
 
 		lv_app_manager.setOnScrollListener(new OnScrollListener() {
 
@@ -262,6 +297,7 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 				holder.tv_app_name = (TextView) view.findViewById(R.id.tv_app_name);
 				holder.tv_app_location = (TextView) view.findViewById(R.id.tv_app_location);
 				holder.iv_app_icon = (ImageView) view.findViewById(R.id.iv_app_icon);
+				holder.iv_status = (ImageView) view.findViewById(R.id.iv_status);
 				view.setTag(holder);
 			}
 
@@ -269,9 +305,14 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 			holder.tv_app_name.setText(info.getName());
 			// holder.tv_app_location.setText(info.getName());
 			if (info.isInRom()) {
-				holder.tv_app_location.setText("手机内存");
+				holder.tv_app_location.setText("手机内存;"+info.getUid());
 			} else {
-				holder.tv_app_location.setText("外部存储");
+				holder.tv_app_location.setText("外部存储;"+info.getUid());
+			}
+			if (dao.find(info.getPackname())) {
+				holder.iv_status.setImageResource(R.drawable.lock);
+			}else {
+				holder.iv_status.setImageResource(R.drawable.unlock);
 			}
 
 			return view;
@@ -294,6 +335,7 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 		TextView tv_app_name;
 		TextView tv_app_location;
 		ImageView iv_app_icon;
+		ImageView iv_status;
 	}
 
 	public long getAvailSpace(String path) {
@@ -345,7 +387,6 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 			shareApp();
 			break;
 		}
-
 	}
 
 	private void shareApp() {

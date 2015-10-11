@@ -72,7 +72,9 @@ public class SplashActivity extends Activity {
 		/**
 		 * 检测查询归属地的数据库是否要拷贝，只有拷贝到文件下，才能访问。
 		 */
-		copyAddressDatabases();
+		copyAddressDatabases("address.db");
+		copyAddressDatabases("antivirus.db");
+		
 		boolean update = sp.getBoolean("update", false);
 		if (update) {
 			checkUpdate();			
@@ -120,14 +122,14 @@ public class SplashActivity extends Activity {
 	 * 将要访问的数据库copy到包名/files/文件下
 	 * "data/data/<包名>/files/address.db"
 	 */
-	private void copyAddressDatabases() {
+	private void copyAddressDatabases(String dbFile) {
 		try {
-			File file = new File(getFilesDir(), "address.db");//getFilesDir：获取data/data/<包名>/目录
+			File file = new File(getFilesDir(), dbFile);//getFilesDir：获取data/data/<包名>/目录
 			//如果files下有了数据库，则不需要再拷贝了
 			if (file.exists() && file.length() > 0) {
 				Log.e(TAG, "号码归属地数据库无需拷贝");
 			}else {
-				InputStream is = getAssets().open("address.db");
+				InputStream is = getAssets().open(dbFile);
 				FileOutputStream fos = new FileOutputStream(file);
 				byte[] bts = new byte[1024];
 				int len = 0;

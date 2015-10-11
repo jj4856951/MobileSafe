@@ -2,6 +2,7 @@ package com.zjw.mobilesafe;
 
 import com.zjw.mobilesafe.service.AddressShowService;
 import com.zjw.mobilesafe.service.CallSmsSafeService;
+import com.zjw.mobilesafe.service.WatchdogService;
 import com.zjw.mobilesafe.ui.SettingClickView;
 import com.zjw.mobilesafe.ui.SettingItemView;
 import com.zjw.mobilesafe.utils.CheckIsServiceRunning;
@@ -23,6 +24,8 @@ public class SettingActivity extends Activity {
 	private SettingClickView scv_address_background;
 	private SettingItemView siv_black_number;
 	
+	private SettingItemView siv_watch_dog;
+	private Intent watchdogIntent;
 	
 	private SharedPreferences sp;
 	private Intent addressIntent;
@@ -31,21 +34,24 @@ public class SettingActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		addressIntent = new Intent(SettingActivity.this, AddressShowService.class);
-		boolean address_show_serviceRunning = CheckIsServiceRunning.isRunning(this, "com.zjw.mobilesafe.service.AddressShowService");
 		
-		if(address_show_serviceRunning){
-			//监听来电的服务是开启的
-			siv_incomming_address_show.setChecked(true);
-		}else{
-			siv_incomming_address_show.setChecked(false);
-		}
+		/**
+		 * 检查来电归属服务是否开启
+		 */
+		boolean address_show_serviceRunning = CheckIsServiceRunning.isRunning(this, "com.zjw.mobilesafe.service.AddressShowService");
+		siv_incomming_address_show.setChecked(address_show_serviceRunning);
 		
 		/**
 		 * 判断黑名单设置是否处于开启状态
 		 */
 		boolean call_sms_safe_service_running = CheckIsServiceRunning.isRunning(this, "com.zjw.mobilesafe.service.CallSmsSafeService");
 		siv_black_number.setChecked(call_sms_safe_service_running);
+		
+		/**
+		 * 判断看门狗服务是否开启
+		 */
+		boolean watch_dog_service_running = CheckIsServiceRunning.isRunning(this, "com.zjw.mobilesafe.service.WatchdogService");
+		siv_watch_dog.setChecked(watch_dog_service_running);
 		
 	}
 
@@ -107,20 +113,12 @@ public class SettingActivity extends Activity {
 			}
 		});
 		
-		/**
-		 * 检查来电归属服务是否开启
-		 */
-		siv_incomming_address_show = (SettingItemView) findViewById(R.id.mm_siv_incomming_address_show);
-		boolean serviceRunning = CheckIsServiceRunning.isRunning(this, "com.zjw.mobilesafe.service.AddressShowService");
-		if (serviceRunning) {
-			siv_incomming_address_show.setChecked(true);
-		}else {
-			siv_incomming_address_show.setChecked(false);
-		}
-		
+
+	
 		/**
 		 * 开启、关闭来电归属服务
 		 */
+		siv_incomming_address_show = (SettingItemView) findViewById(R.id.mm_siv_incomming_address_show);
 		siv_incomming_address_show.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -132,6 +130,25 @@ public class SettingActivity extends Activity {
 				}else {
 					siv_incomming_address_show.setChecked(true);					
 					startService(addressIntent);
+				}
+			}
+		});
+		
+		/**
+		 * 开启、关闭看门狗服务
+		 */
+		siv_watch_dog = (SettingItemView) findViewById(R.id.mm_siv_watch_dog);
+		siv_watch_dog.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				watchdogIntent = new Intent(SettingActivity.this, WatchdogService.class);
+				if (siv_watch_dog.isChecked()) {
+					siv_watch_dog.setChecked(false);
+					stopService(watchdogIntent);
+				}else {
+					siv_watch_dog.setChecked(true);					
+					startService(watchdogIntent);
 				}
 			}
 		});

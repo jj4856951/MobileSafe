@@ -47,4 +47,13 @@
         zjw:desc_on="黑名单监控已开启"
         zjw:mtitle="设置黑名单监控" >
     </com.zjw.mobilesafe.ui.SettingItemView>
+    
+    <com.zjw.mobilesafe.ui.SettingItemView
+        android:id="@+id/mm_siv_watch_dog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        zjw:desc_off="看门狗已关闭"
+        zjw:desc_on="看门狗已开启"
+        zjw:mtitle="设置看门狗" >
+    </com.zjw.mobilesafe.ui.SettingItemView>
 </LinearLayout>

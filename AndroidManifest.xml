@@ -34,6 +34,9 @@
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
 
     <application
         android:allowBackup="true"
@@ -112,8 +115,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/update_widget" />
         </receiver>
-        <receiver android:name="com.zjw.mobilesafe.receiver.KillAllProcessReceiver">
-            <intent-filter ><action android:name="com.zjw.mobile.killall"/></intent-filter>
+        <receiver android:name="com.zjw.mobilesafe.receiver.KillAllProcessReceiver" >
+            <intent-filter>
+                <action android:name="com.zjw.mobile.killall" />
+            </intent-filter>
         </receiver>
 
         <activity
@@ -136,7 +141,10 @@
         </service>
         <service android:name="com.zjw.mobilesafe.service.AutoCleanService" >
         </service>
-        <service android:name="com.zjw.mobilesafe.service.UpdateWidgetService"></service>
+        <service android:name="com.zjw.mobilesafe.service.UpdateWidgetService" >
+        </service>
+        <service android:name="com.zjw.mobilesafe.service.WatchdogService" >
+        </service>
 
         <activity android:name="com.zjw.mobilesafe.AppManagerActivity" >
         </activity>
@@ -144,6 +152,18 @@
         </activity>
         <activity android:name="com.zjw.mobilesafe.TaskSettingActivity" >
         </activity>
+        <activity
+            android:name="com.zjw.mobilesafe.InputPwdActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance" >
+        </activity>
+        <activity android:name="com.zjw.mobilesafe.TrafficActivity" >
+        </activity>
+        <activity
+            android:name="com.zjw.mobilesafe.AntiVirusActivity"
+            android:configChanges="orientation|keyboard|screenSize" >
+        </activity>
+        <activity android:name="com.zjw.mobilesafe.ClearCacheActivity"></activity>
     </application>
 
 </manifest>
